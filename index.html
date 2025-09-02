@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fix & Install Tech — Tutorials</title>
+  <meta name="description" content="Step‑by‑step tech tutorials: fix issues, install software, upgrade hardware. All in one clean, responsive page." />
+  <style>
+    /* ====== Design System ====== */
+    :root{
+      --bg: #0b0f14;
+      --panel: #11161d;
+      --soft: #0d131a;
+      --text: #e6edf3;
+      --muted: #a0acb8;
+      --brand: #7c5cff; /* accent */
+      --brand-2:#22c55e; /* success */
+      --warn:#f59e0b; 
+      --danger:#ef4444;
+      --card:#0f141b;
+      --border:#1f2a36;
+      --code:#0a0f14;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius-2xl: 18px;
+      --radius-xl: 14px;
+      --radius-lg: 12px;
+      --radius-md: 10px;
+      --radius-sm: 8px;
+    }
+    [data-theme="light"]{
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --soft: #f2f4f8;
+      --text: #0c1220;
+      --muted:#4b5563;
+      --brand:#6d28d9;
+      --card:#ffffff;
+      --border:#e5e7eb;
+      --code:#0b1020;
+      --shadow: 0 10px 25px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text); background:linear-gradient(180deg,var(--bg),#0c1219 30%, var(--bg));
+      letter-spacing:.2px; 
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{display:grid; grid-template-columns: 270px 1fr; min-height:100vh}
+    aside{position:sticky; top:0; align-self:start; height:100vh; overflow:auto; background:linear-gradient(180deg,var(--panel),var(--soft)); border-right:1px solid var(--border)}
+    main{padding:28px clamp(16px,4vw,40px)}
+
+    /* Sidebar */
+    .logo{display:flex; align-items:center; gap:10px; padding:22px 18px 16px}
+    .logo .mark{width:38px; height:38px; border-radius:14px; background:conic-gradient(from 210deg,var(--brand),#34d399,#60a5fa,#f472b6,var(--brand)); box-shadow: var(--shadow)}
+    .logo h1{font-size:18px; letter-spacing:.5px; margin:0}
+
+    .search{position:sticky; top:0; padding:0 16px 16px; background:linear-gradient(180deg,var(--panel),transparent 70%); z-index:5}
+    .search input{width:100%; padding:12px 14px 12px 40px; border-radius:12px; border:1px solid var(--border); background:var(--bg); color:var(--text); outline:none}
+    .search .icon{position:relative}
+    .search .icon svg{position:absolute; top:10px; left:26px; opacity:.6}
+
+    nav{padding:8px 10px 30px}
+    .nav-section{margin:10px 6px 16px}
+    .nav-section h4{margin:12px 8px; font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted)}
+    .nav-link{display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:10px; margin:2px 6px; color:var(--muted)}
+    .nav-link:hover{background:rgba(124,92,255,.12); color:var(--text)}
+    .nav-link.active{background:rgba(124,92,255,.18); color:var(--text); border:1px solid rgba(124,92,255,.4)}
+
+    /* Topbar */
+    .topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px}
+    .topbar .title{font-size:clamp(20px,4vw,30px); font-weight:700}
+    .topbar .actions{display:flex; align-items:center; gap:10px}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:var(--panel); color:var(--text); cursor:pointer}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(180deg,var(--brand),#5b3df7); border:none}
+
+    /* Cards grid */
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
+    .card{grid-column: span 4; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-2xl); padding:16px; box-shadow:var(--shadow); display:flex; flex-direction:column; justify-content:space-between; min-height:190px}
+    .card h3{margin:6px 0 8px; font-size:18px}
+    .card p{margin:0 0 12px; color:var(--muted)}
+    .pill{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background:var(--soft); color:var(--muted)}
+    .tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:auto}
+
+    .hero{display:grid; grid-template-columns: 1.2fr .8fr; gap:18px; margin:8px 0 22px}
+    .hero .panel{background:var(--card); border:1px solid var(--border); border-radius:var(--radius-2xl); padding:18px; box-shadow:var(--shadow)}
+
+    /* Article */
+    article{background:var(--card); border:1px solid var(--border); border-radius:var(--radius-2xl); padding:22px; box-shadow:var(--shadow)}
+    article h1{margin-top:0}
+    article .meta{display:flex; flex-wrap:wrap; gap:10px; color:var(--muted); font-size:14px}
+    article .steps{counter-reset: step;}
+    article .steps li{list-style:none; margin:14px 0; padding:14px 14px 14px 44px; border:1px dashed var(--border); border-radius:12px; position:relative; background:linear-gradient(180deg, rgba(124,92,255,.06), transparent)}
+    article .steps li:before{counter-increment: step; content: counter(step); position:absolute; left:12px; top:12px; width:22px; height:22px; border-radius:999px; display:grid; place-items:center; background:var(--brand); color:#fff; font-weight:700; font-size:12px}
+    pre{background:var(--code); color: #d1e7ff; padding:14px; border-radius:12px; overflow:auto; border:1px solid var(--border); position:relative}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .copy{position:absolute; right:10px; top:10px; font-size:12px; padding:6px 8px; border-radius:8px; border:1px solid var(--border); background:var(--panel); cursor:pointer}
+
+    /* Footer */
+    footer{margin:24px 0 10px; color:var(--muted); font-size:14px; display:flex; justify-content:space-between; align-items:center}
+
+    /* Hidden / routing */
+    .route{display:none}
+    .route.active{display:block}
+
+    /* Responsive */
+    @media (max-width: 1100px){
+      .wrap{grid-template-columns: 1fr}
+      aside{position:relative; height:auto}
+      .hero{grid-template-columns: 1fr}
+      .card{grid-column: span 6}
+    }
+    @media (max-width: 720px){
+      .card{grid-column: span 12}
+      .btn{padding:10px 12px}
+      .topbar{flex-direction:column; align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <!-- ============ SIDEBAR ============ -->
+    <aside>
+      <div class="logo">
+        <div class="mark"></div>
+        <h1>Fix & Install — Tech Tutorials</h1>
+      </div>
+      <div class="search">
+        <div class="icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/></svg>
+        </div>
+        <input id="sidebarSearch" placeholder="Search tutorials, e.g. 'SSD'" />
+      </div>
+
+      <nav id="nav">
+        <div class="nav-section">
+          <h4>Overview</h4>
+          <a href="#home" class="nav-link" data-route>🏠 Home</a>
+          <a href="#getting-started" class="nav-link" data-route>✨ Getting Started</a>
+        </div>
+        <div class="nav-section">
+          <h4>Hardware</h4>
+          <a href="#tutorial/install-ssd" class="nav-link" data-route>🔧 Replace HDD with SSD</a>
+          <a href="#tutorial/add-ram" class="nav-link" data-route>🧠 Add RAM to Laptop</a>
+          <a href="#tutorial/clean-fans" class="nav-link" data-route>🌀 Clean Laptop Fans</a>
+        </div>
+        <div class="nav-section">
+          <h4>Software</h4>
+          <a href="#tutorial/fix-defender" class="nav-link" data-route>🛡️ Fix Windows Security</a>
+          <a href="#tutorial/clean-install-windows" class="nav-link" data-route>💿 Clean Install Windows</a>
+          <a href="#tutorial/dual-boot-linux" class="nav-link" data-route>🐧 Dual‑Boot Linux</a>
+          <a href="#tutorial/boost-gta5" class="nav-link" data-route>🎮 Boost FPS in GTA V</a>
+        </div>
+        <div class="nav-section">
+          <h4>Networking</h4>
+          <a href="#tutorial/speed-up-wifi" class="nav-link" data-route>📶 Speed Up Wi‑Fi</a>
+          <a href="#tutorial/router-reset" class="nav-link" data-route>♻️ Reset Router Safely</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main>
+      <div class="topbar">
+        <div class="title" id="pageTitle">Home</div>
+        <div class="actions">
+          <button class="btn" id="toggleTheme" title="Toggle light/dark">🌗 Theme</button>
+          <button class="btn" id="printPage" title="Print this page">🖨️ Print</button>
+          <a class="btn primary" href="#getting-started">Start Learning →</a>
+        </div>
+      </div>
+
+      <!-- ===== HOME ===== -->
+      <section id="home" class="route active">
+        <div class="hero">
+          <div class="panel">
+            <h2>Build your tech superpower 🦾</h2>
+            <p>
+              Clear, beginner‑friendly guides that show you exactly how to
+              <strong>fix problems</strong>, <strong>install software</strong>, and <strong>upgrade hardware</strong>—with screenshots, commands, and checklists.
+            </p>
+            <ul>
+              <li>✅ No fluff—just step‑by‑step instructions</li>
+              <li>✅ Safe methods with backups & recovery tips</li>
+              <li>✅ Works offline after first load (use your browser's Save)</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Quick Search</h3>
+            <input id="quickSearch" placeholder="Try: Windows Security, SSD, Dual‑Boot" style="width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:var(--bg); color:var(--text);" />
+            <div id="searchResults" style="margin-top:12px; display:grid; gap:10px"></div>
+          </div>
+        </div>
+
+        <div class="grid" id="cards">
+          <!-- Cards are injected by JS from the tutorial index below -->
+        </div>
+
+        <footer>
+          <span>© <span id="year"></span> Fix & Install • All tutorials in one page.</span>
+          <span>Made with ♥ for learners</span>
+        </footer>
+      </section>
+
+      <!-- ===== GETTING STARTED ===== -->
+      <section id="getting-started" class="route">
+        <article>
+          <h1>Getting Started</h1>
+          <p class="meta">Estimated time: 5 minutes • Skill: Beginner</p>
+          <h3>What you'll need</h3>
+          <ul>
+            <li>A computer with internet (for downloads)</li>
+            <li>A USB drive (16GB+ for OS installs)</li>
+            <li>Some patience and curiosity 😊</li>
+          </ul>
+          <h3>How the site works</h3>
+          <ol class="steps">
+            <li>Use the sidebar to choose a tutorial.</li>
+            <li>Read the <strong>Before you start</strong> box (backups, warnings).</li>
+            <li>Follow the steps in order. Use the copy buttons on code blocks.</li>
+            <li>Use the breadcrumbs to jump back.</li>
+          </ol>
+          <p>Pro tip: Click <strong>🖨️ Print</strong> to print/save a PDF of any tutorial.</p>
+        </article>
+      </section>
+
+      <!-- ===== TUTORIALS ===== -->
+
+      <section id="tutorial/install-ssd" class="route">
+        <article>
+          <div class="meta">Hardware • 30–60 min • Difficulty: Intermediate</div>
+          <h1>Replace a Laptop HDD with an SSD</h1>
+          <p>Speed up boot and app loads by 3–5× by upgrading to a 2.5" SATA SSD.</p>
+          <h3>Before you start</h3>
+          <ul>
+            <li>Back up important files to cloud or USB drive.</li>
+            <li>Have a small Phillips screwdriver and plastic pry tool.</li>
+            <li>Power off the laptop and unplug the charger.</li>
+          </ul>
+          <h3>Steps</h3>
+          <ol class="steps">
+            <li>Remove bottom cover: unscrew all screws (some are under rubber feet). Pry gently along the edges.</li>
+            <li>Disconnect the battery (if accessible) to avoid shorts.</li>
+            <li>Locate the 2.5" drive bay. Unscrew the drive caddy and disconnect the SATA cable.</li>
+            <li>Swap in the SSD, reattach the cable, secure with screws, and reassemble.</li>
+            <li>Boot and enter BIOS to confirm the SSD is detected.</li>
+            <li>Install Windows (see <a href="#tutorial/clean-install-windows">Clean Install Windows</a>) or clone old drive to the SSD using a USB–SATA adapter.</li>
+          </ol>
+        </article>
+      </section>
+
+      <section id="tutorial/add-ram" class="route">
+        <article>
+          <div class="meta">Hardware • 10–20 min • Difficulty: Beginner</div>
+          <h1>Add RAM to a Laptop</h1>
+          <p>Reduce stutter and speed up multitasking by adding more memory.</p>
+          <h3>Checklist</h3>
+          <ul>
+            <li>Confirm RAM type (e.g., DDR4 SODIMM, 2133–3200 MT/s).</li>
+            <li>Match capacity and speed where possible. Mixing usually works but runs at the slower stick's speed.</li>
+            <li>Power off, unplug, and hold power button 10s to discharge.</li>
+          </ul>
+          <h3>Steps</h3>
+          <ol class="steps">
+            <li>Open bottom cover and ground yourself to avoid static.</li>
+            <li>Insert the SODIMM at a ~30° angle, gold pins first, then press down until side clips click.</li>
+            <li>Reassemble and power on. Enter BIOS to confirm capacity.</li>
+            <li>In Windows, check <em>Task Manager → Performance → Memory</em>.</li>
+          </ol>
+        </article>
+      </section>
+
+      <section id="tutorial/clean-fans" class="route">
+        <article>
+          <div class="meta">Hardware • 20–40 min • Difficulty: Beginner</div>
+          <h1>Clean Laptop Fans & Vents</h1>
+          <p>Lower temperatures and noise for better performance and battery life.</p>
+          <ol class="steps">
+            <li>Power off, unplug, and open the back cover.</li>
+            <li>Hold the fan blades with a plastic stick and blow short bursts of compressed air.</li>
+            <li>Brush dust from heatsinks and vents. Avoid spinning fans with air blasts.</li>
+            <li>Reassemble and monitor temps with HWInfo or similar.</li>
+          </ol>
+        </article>
+      </section>
+
+      <section id="tutorial/fix-defender" class="route">
+        <article>
+          <div class="meta">Software • 10–25 min • Difficulty: Beginner</div>
+          <h1>Fix Windows Security / Defender Not Opening</h1>
+          <p>When the Windows Security app won't launch or shows blank, try these fixes.</p>
+          <h3>Quick fixes</h3>
+          <ol class="steps">
+            <li>Restart <strong>Security Center</strong> service: 
+              <pre><button class="copy">Copy</button><code>powershell -NoProfile -Command "Restart-Service SecurityHealthService -Force"</code></pre>
+            </li>
+            <li>Re‑register the app package:
+              <pre><button class="copy">Copy</button><code>PowerShell -NoProfile -ExecutionPolicy Bypass -Command "Get-AppxPackage Microsoft.SecHealthUI -AllUsers | Reset-AppxPackage"</code></pre>
+            </li>
+            <li>Check corrupted system files:
+              <pre><button class="copy">Copy</button><code>sfc /scannow &amp;&amp; DISM /Online /Cleanup-Image /RestoreHealth</code></pre>
+            </li>
+            <li>Ensure <em>Windows Update</em> is up to date and reboot.</li>
+          </ol>
+        </article>
+      </section>
+
+      <section id="tutorial/clean-install-windows" class="route">
+        <article>
+          <div class="meta">Software • 30–60 min • Difficulty: Intermediate</div>
+          <h1>Clean Install Windows (UEFI + GPT)</h1>
+          <p>Fresh install Windows for best performance and fewer errors.</p>
+          <h3>Before you start</h3>
+          <ul>
+            <li>Back up files. Know your Microsoft account and Wi‑Fi password.</li>
+            <li>Use a 16GB+ USB and the official Media Creation Tool.</li>
+          </ul>
+          <h3>Create installer</h3>
+          <pre><button class="copy">Copy</button><code>1) Download Media Creation Tool from Microsoft
+2) Run it → Create installation media → USB flash drive → 64‑bit
+3) When done, safely eject the USB</code></pre>
+          <h3>Install</h3>
+          <ol class="steps">
+            <li>Boot from USB (F9/F12/Esc boot menu). Choose language &amp; keyboard.</li>
+            <li>Click <strong>Install Now</strong> → <em>I don't have a product key</em> (Windows 10/11 activates later).</li>
+            <li>Select edition that matches your previous license.</li>
+            <li>Choose <strong>Custom</strong> → delete all partitions on the target drive → let Setup create new ones (GPT).</li>
+            <li>Proceed with install and complete OOBE (skip Microsoft account if you prefer local).</li>
+          </ol>
+        </article>
+      </section>
+
+      <section id="tutorial/dual-boot-linux" class="route">
+        <article>
+          <div class="meta">Software • 45–90 min • Difficulty: Intermediate</div>
+          <h1>Dual‑Boot Linux with Windows (Safe Method)</h1>
+          <p>Install Linux alongside Windows using UEFI with a separate partition.</p>
+          <ol class="steps">
+            <li>In Windows, shrink your main partition (Disk Management) by 30–60GB.</li>
+            <li>Create a Linux USB with Rufus or Etcher. Use GPT + UEFI.</li>
+            <li>Boot USB, choose <em>Try</em> first to verify Wi‑Fi and graphics.</li>
+            <li>Install, select <em>Something else</em>, create <code>/</code> (ext4) and <code>swap</code>, install the bootloader to the EFI partition.</li>
+            <li>After install, set Windows Boot Manager as first in BIOS if you want Windows default, or use GRUB menu.</li>
+          </ol>
+        </article>
+      </section>
+
+      <section id="tutorial/boost-gta5" class="route">
+        <article>
+          <div class="meta">Gaming • 15–40 min • Difficulty: Beginner</div>
+          <h1>Boost FPS in GTA V (Low‑Spec Friendly)</h1>
+          <ul>
+            <li>Update GPU drivers (NVIDIA/AMD/Intel).</li>
+            <li>Set in‑game: 1080p or 900p, FXAA on, MSAA off, Shadows Normal, Reflection MSAA off, Post FX Normal, Advanced Graphics off.</li>
+            <li>Windows: Game Mode on, Background apps off, High Performance power plan.</li>
+            <li>Optional: Use <code>commandline.txt</code> with <code>-FrameQueueLimit 1</code>, <code>-disableHyperthreading</code> (test), <code>-ignoreDifferentVideoCard</code>.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section id="tutorial/speed-up-wifi" class="route">
+        <article>
+          <div class="meta">Networking • 10–25 min • Difficulty: Beginner</div>
+          <h1>Speed Up Slow Wi‑Fi</h1>
+          <ol class="steps">
+            <li>Place the router higher and central; avoid walls and metal.</li>
+            <li>Use 5 GHz for speed, 2.4 GHz for range. Rename SSIDs to pick easily.</li>
+            <li>Change channel to a less congested one (Auto is often fine).</li>
+            <li>Update router firmware and your Wi‑Fi adapter driver.</li>
+          </ol>
+        </article>
+      </section>
+
+      <section id="tutorial/router-reset" class="route">
+        <article>
+          <div class="meta">Networking • 5–10 min • Difficulty: Beginner</div>
+          <h1>Reset a Router Safely (Keep ISP Settings)</h1>
+          <ol class="steps">
+            <li>Try a soft reboot first: unplug 30 seconds, plug back.</li>
+            <li>Backup current settings in the router web interface.</li>
+            <li>Use reset pin for 10 seconds to factory‑reset, then restore the backup.</li>
+          </ol>
+        </article>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // ===== Data: Tutorial Index =====
+    const tutorials = [
+      { id: 'install-ssd', title: 'Replace HDD with SSD', blurb: 'Upgrade to a SATA SSD for 3–5× speed.', tags:['hardware','storage','ssd'] },
+      { id: 'add-ram', title: 'Add RAM to Laptop', blurb: 'Reduce stutter and boost multitasking.', tags:['hardware','memory','laptop'] },
+      { id: 'clean-fans', title: 'Clean Laptop Fans', blurb: 'Lower temps & noise safely.', tags:['hardware','cooling','maintenance'] },
+      { id: 'fix-defender', title: 'Fix Windows Security', blurb: 'When Windows Security won\'t open.', tags:['software','windows','security'] },
+      { id: 'clean-install-windows', title: 'Clean Install Windows', blurb: 'Fresh start with UEFI + GPT.', tags:['software','windows','install'] },
+      { id: 'dual-boot-linux', title: 'Dual‑Boot Linux', blurb: 'Linux beside Windows, safely.', tags:['software','linux','dualboot'] },
+      { id: 'boost-gta5', title: 'Boost FPS in GTA V', blurb: 'Low‑spec friendly tweaks.', tags:['gaming','windows','performance'] },
+      { id: 'speed-up-wifi', title: 'Speed Up Wi‑Fi', blurb: 'Fix slow internet at home.', tags:['network','wifi','router'] },
+      { id: 'router-reset', title: 'Reset Router Safely', blurb: 'Factory reset without losing ISP settings.', tags:['network','router'] },
+    ];
+
+    // ===== Utilities =====
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+
+    // ===== Build Cards =====
+    function renderCards(list){
+      const container = document.getElementById('cards');
+      container.innerHTML = '';
+      list.forEach(t => {
+        const el = document.createElement('a');
+        el.className = 'card';
+        el.href = `#tutorial/${t.id}`;
+        el.innerHTML = `
+          <div>
+            <span class="pill">${t.tags[0].toUpperCase()}</span>
+            <h3>${t.title}</h3>
+            <p>${t.blurb}</p>
+          </div>
+          <div class="tags">${t.tags.map(x=>`<span class='pill'>#${x}</span>`).join('')}</div>
+        `;
+        container.appendChild(el);
+      });
+    }
+    renderCards(tutorials);
+
+    // ===== Search (sidebar + quick) =====
+    function doSearch(q){
+      q = q.trim().toLowerCase();
+      if(!q) return tutorials;
+      return tutorials.filter(t => (t.title + ' ' + t.tags.join(' ') + ' ' + t.blurb).toLowerCase().includes(q));
+    }
+
+    $('#sidebarSearch').addEventListener('input', e => renderCards(doSearch(e.target.value)));
+    $('#quickSearch').addEventListener('input', e => {
+      const results = doSearch(e.target.value);
+      const box = $('#searchResults');
+      box.innerHTML = results.slice(0,6).map(t => `<a class="btn" href="#tutorial/${t.id}">→ ${t.title}</a>`).join('');
+    });
+
+    // ===== Router (hash) =====
+    function setActiveRoute(){
+      const hash = location.hash || '#home';
+      const route = hash.split('?')[0];
+      $$('.route').forEach(el => el.classList.remove('active'));
+      const target = document.querySelector(route);
+      if(target){ target.classList.add('active'); }
+      // highlight nav
+      $$('#nav .nav-link').forEach(a => a.classList.toggle('active', a.getAttribute('href') === route));
+      // title
+      const mapTitle = {
+        '#home':'Home', '#getting-started':'Getting Started',
+        '#tutorial/install-ssd':'Replace HDD with SSD',
+        '#tutorial/add-ram':'Add RAM to Laptop',
+        '#tutorial/clean-fans':'Clean Fans',
+        '#tutorial/fix-defender':'Fix Windows Security',
+        '#tutorial/clean-install-windows':'Clean Install Windows',
+        '#tutorial/dual-boot-linux':'Dual‑Boot Linux',
+        '#tutorial/boost-gta5':'Boost FPS in GTA V',
+        '#tutorial/speed-up-wifi':'Speed Up Wi‑Fi',
+        '#tutorial/router-reset':'Reset Router Safely',
+      };
+      $('#pageTitle').textContent = mapTitle[route] || 'Tutorial';
+    }
+    window.addEventListener('hashchange', setActiveRoute);
+    setActiveRoute();
+
+    // ===== Copy buttons for code blocks =====
+    function wireCopy(){
+      document.querySelectorAll('pre .copy').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const code = btn.nextElementSibling.innerText;
+          navigator.clipboard.writeText(code).then(()=>{
+            const old = btn.textContent; btn.textContent = 'Copied!';
+            setTimeout(()=> btn.textContent = old, 1300);
+          });
+        });
+      });
+    }
+    wireCopy();
+
+    // ===== Theme toggle =====
+    const applyTheme = t => document.documentElement.setAttribute('data-theme', t);
+    const storedTheme = localStorage.getItem('theme') || 'dark';
+    if(storedTheme === 'light') applyTheme('light');
+    $('#toggleTheme').addEventListener('click', () => {
+      const curr = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      applyTheme(curr); localStorage.setItem('theme', curr);
+    });
+
+    // ===== Print =====
+    $('#printPage').addEventListener('click', () => window.print());
+
+    // ===== Year =====
+    $('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
